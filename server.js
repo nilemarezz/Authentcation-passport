@@ -40,8 +40,9 @@ app.use((req,res,next)=> {
 
 //Route
 app.use('/',require('./routes/index'));
-app.use('/user',require('./routes/user'));
 app.use('/',require('./routes/facebook-route'));
+app.use('/user',require('./routes/user'));
+
 
 
 app.listen(process.env.PORT || 3000,()=>console.log('Server is Started'));
