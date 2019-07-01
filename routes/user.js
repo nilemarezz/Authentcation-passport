@@ -6,6 +6,7 @@ const passport = require('passport');
 
 
 
+
 router.get('/signup',(req,res)=> res.render('signup',{errors:[]}));
 router.post('/signup', async (req,res)=> {
     const {name, email, password, password2} = req.body;
@@ -69,5 +70,9 @@ router.get('/logout',(req,res)=>{
     req.flash('success_msg','You are logged Out');
     res.redirect('/user/login');
 })
+
+
+
+
 
 module.exports = router;
