@@ -1,10 +1,8 @@
-require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const passport = require('passport');
 const flash = require('connect-flash');
-const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
 const session      = require('express-session');
 
@@ -40,7 +38,6 @@ app.use((req,res,next)=> {
 
 //Route
 app.use('/',require('./routes/index'));
-app.use('/',require('./routes/facebook-route'));
 app.use('/user',require('./routes/user'));
 
 

@@ -1,9 +1,14 @@
+require('dotenv').config();
 const LocalStragy = require('passport-local').Strategy;
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/User');
+const facebookStrategy = require('passport-facebook');
 
 module.exports = function (passport) {
+
+
+    
+
     passport.use(
         new LocalStragy({ usernameField: 'email' },
             async (email, password, done) => {
@@ -30,13 +35,50 @@ module.exports = function (passport) {
             })
     )
 
-    passport.serializeUser((user, done) =>{
+    passport.use(new facebookStrategy({
+        clientID: process.env.clientID,
+        clientSecret: process.env.clientSecret,
+        callbackURL: process.env.callbackURL,
+        profileFields: ['id', 'email', 'displayName', 'photos']
+
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            console.log(profile._json.email);
+            console.log(profile._json.name);
+            
+            const existingUser = await User.findOne({name:profile._json.name})
+            if(existingUser){
+                console.log('existingUser')
+                console.log(existingUser);
+                done(null,existingUser);
+            }else{
+                const newUser = {
+                    method: 'facebook',
+                    name:profile._json.name,
+                    email:profile._json.email,
+                    password:'facebook'
+                }
+                console.log('newUser')
+                console.log(newUser);
+                await User.create(newUser);
+                done(null,newUser);
+            }
+            // Save to DB
+            
+        } catch (err) {
+            console.log(err)
+        }
+    }))
+
+    passport.serializeUser((user, done) => {
         done(null, user.id);
-      });
-      
-      passport.deserializeUser((id, done)=> {
-        User.findById(id, function(err, user) {
-          done(err, user);
+    });
+
+    passport.deserializeUser((id, done) => {
+        User.findById(id, function (err, user) {
+            done(err, user);
         });
-      });
+    });
+
+    
 }

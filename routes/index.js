@@ -4,7 +4,7 @@ const {eusureAuthenticated} = require('../config/auth');
 
 router.get('/',(req,res)=> res.render('index'));
 router.get('/profile',eusureAuthenticated,(req,res)=>{
-    res.render('profile',{name:req.user.name,email:req.user.email});
+    res.render('profile',{name:req.user.name,email:req.user.email,method:req.user.method});
     
 })
 

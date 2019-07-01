@@ -4,9 +4,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt-nodejs');
 const passport = require('passport');
 
-
-
-
+// ------------- LOCAL ROUTE ------------------------
 router.get('/signup',(req,res)=> res.render('signup',{errors:[]}));
 router.post('/signup', async (req,res)=> {
     const {name, email, password, password2} = req.body;
@@ -72,6 +70,21 @@ router.get('/logout',(req,res)=>{
 })
 
 
+//---------------------- FB ROUTE ---------------------
+
+router.get("/auth/facebook", passport.authenticate("facebook",{ scope : ['email']}));
+router.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    successRedirect: "/profile",
+    failureRedirect: "/user/fail",
+    session: true
+  })
+);
+
+router.get('/fail',(req,res)=>{
+    res.send('fail')
+})
 
 
 
